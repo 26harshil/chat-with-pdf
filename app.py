@@ -267,13 +267,12 @@ else:
         # Save user message to history
         st.session_state.messages.append({"role": "user", "content": question})
 
-        # Run retriever and LLM chain
+        # Run retriever and LLM chain with real-time streaming
         with st.chat_message("assistant"):
-            with st.spinner("Analyzing context and generating answer..."):
-                try:
-                    response = st.session_state.chain.invoke(question)
-                    st.markdown(response)
-                    # Save assistant message to history
-                    st.session_state.messages.append({"role": "assistant", "content": response})
-                except Exception as e:
-                    st.error(f"Error executing query: {e}")
+            try:
+                # st.write_stream will consume the generator and animate the output
+                response = st.write_stream(st.session_state.chain.stream(question))
+                # Save assistant message to history
+                st.session_state.messages.append({"role": "assistant", "content": response})
+            except Exception as e:
+                st.error(f"Error executing query: {e}")
