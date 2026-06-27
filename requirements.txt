@@ -4,7 +4,7 @@ langchain-core
 langchain-community
 langchain-openai
 langchain-pinecone
-pinecone-client
+pinecone
 pypdf
 sentence-transformers
 python-dotenv
