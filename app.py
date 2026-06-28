@@ -224,7 +224,11 @@ else:
     # We have uploaded files
     uploaded_files_keys = [f"{f.name}_{f.size}" for f in uploaded_files]
     batch_key = "|".join(sorted(uploaded_files_keys))
-    is_processing = st.session_state.get("current_batch_key") != batch_key
+    is_processing = (
+        st.session_state.get("current_batch_key") != batch_key
+        or "retriever" not in st.session_state
+        or "chain" not in st.session_state
+    )
     
     # 1. Render Chat History in chat_container
     with chat_container:
@@ -371,7 +375,7 @@ else:
                     # Set up chain
                     chain = (
                         {
-                            "context": lambda x: format_docs_with_sources(st.session_state.retriever.invoke(x["question"])),
+                            "context": lambda x, r=retriever: format_docs_with_sources(r.invoke(x["question"])),
                             "question": lambda x: x["question"],
                             "chat_history": lambda x: x["chat_history"],
                         }
