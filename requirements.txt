@@ -8,3 +8,5 @@ pinecone
 pypdf
 sentence-transformers
 python-dotenv
+docx2txt
+
